@@ -28,6 +28,6 @@ Fichier test.mp4.
   + FRAMES_PER_DAY
   + largeur
   + hauteur
-4. Exécuter le script
-5. Récupérer le fichier mp4
+3. Exécuter le script
+4. Récupérer le fichier mp4
 
