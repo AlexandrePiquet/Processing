@@ -8,11 +8,9 @@ Structure du fichier .csv nécessaire :
 - puis une colonne par jeu,
 - les cellules contiennent le nombre de parties CUMULEES.
 
-
 Code écrit par Alexandre Piquet
-v.1.1 du 02/07/2021
+v.1.3 du 26/10/2021
 */
-
 
 import java.util.*;
 import com.hamoid.*;
@@ -59,10 +57,15 @@ float BAR_HEIGHT;
 PFont font;
 /*
 Vitesse d'enregistrement : 30 fps
-Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 31/05/21, durée totale : 32 min 20 s)
-Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 31/05/21, durée totale : 3 min 14 s)
+Pour toutes les parties : 
+Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 30/09/21, durée totale : 34 min 50 s)
+Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 30/09/21, durée totale : 3 min 29 s)
+Pour une seule année : 
+Si FRAMES_PER_DAY = 15, 1 s/jour <=> 1 jour/s, durée totale : 3 min 03 s
+Si FRAMES_PER_DAY = 5, 1 s/jour <=> 1 jour/s, durée totale : 1 min 01 s
+Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s, durée totale : 36 s
 */
-float FRAMES_PER_DAY = 3;
+float FRAMES_PER_DAY = 1;
 //unités utilisées pour l'axe
 int[] unitPresets = {1,2,5,10,20,50,100,200,500,1000};
 //variable pour l'exportation de la vidéo
@@ -73,7 +76,7 @@ void setup(){
   font = loadFont("ProcessingSansPro-Regular-96.vlw");
   //choix des couleurs utilisées pour les barres
   randomSeed(432766);
-  dataFile = loadStrings("/home/home/Documents/envois_Github/Processing/data/parties_par_date3.csv");
+  dataFile = loadStrings("/home/home/Documents/envois_Github/Processing/data/2020.csv");
   /*Récupération des lignes du fichier,
   calcul du nombre de jeux (colonnes-1) et du nombre de jours (lignes-1)*/
   String[] parts = dataFile[0].split(";");
@@ -116,12 +119,17 @@ void setup(){
   size(1520,854);
   
   //instanciation rendu vidéo
-  videoExport = new VideoExport(this, "testsV2.mp4");
+  videoExport = new VideoExport(this, "test.mp4");
   videoExport.forgetFfmpegPath();
   videoExport.startMovie();
 }
 
 //jour de départ de l'enregistrement
+/*
+01/01/2020 : 1460
+31/12/2020 : 1824
+31/12/2021 : 2192
+*/
 int START_DAY = 0;
 void draw(){
   if (affichageRecap){
@@ -191,6 +199,9 @@ void getUnits(){
 //Détermination de l'unité à utiliser
 void drawHorizTickmarks(){
   float preferredUnit = WAIndex(unitChoices, currentDay, 4);
+  if(preferredUnit == -1) {
+    preferredUnit = 0;
+  }
   float unitRem = preferredUnit%1.0;
   if(unitRem < 0.001){
     unitRem = 0;
@@ -238,7 +249,8 @@ void drawbars(){
   noStroke();
   for(int p = 0; p < NOMBRE_JEUX; p++){
     Jeu je = jeu[p];
-    float val = linIndex(je.parties,currentDay);
+    if(je.parties[date] > 0){
+      float val = linIndex(je.parties,currentDay);
     float x = valueToX(val);
     float rang = WAIndex(je.rangs, currentDay, 5);
     float y = rankToY(rang);
@@ -249,7 +261,8 @@ void drawbars(){
     partie_affichage = (int)je.parties[date];
     textAlign(LEFT);
     text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
-    date = (int)currentDay;    
+    date = (int)currentDay;
+    }
   } 
 }
 
