@@ -9,7 +9,7 @@ Structure du fichier .csv nécessaire :
 - les cellules contiennent le nombre de parties CUMULEES.
 
 Code écrit par Alexandre Piquet
-v.1.3 du 26/10/2021
+v.1.3 du 29/10/2021
 */
 
 import java.util.*;
@@ -76,7 +76,7 @@ void setup(){
   font = loadFont("ProcessingSansPro-Regular-96.vlw");
   //choix des couleurs utilisées pour les barres
   randomSeed(432766);
-  dataFile = loadStrings("/home/home/Documents/envois_Github/Processing/data/2020.csv");
+  dataFile = loadStrings("/data/parties.csv");
   /*Récupération des lignes du fichier,
   calcul du nombre de jeux (colonnes-1) et du nombre de jours (lignes-1)*/
   String[] parts = dataFile[0].split(";");
@@ -119,7 +119,7 @@ void setup(){
   size(1520,854);
   
   //instanciation rendu vidéo
-  videoExport = new VideoExport(this, "test.mp4");
+  videoExport = new VideoExport(this, "vidéo_parties.mp4");
   videoExport.forgetFfmpegPath();
   videoExport.startMovie();
 }
