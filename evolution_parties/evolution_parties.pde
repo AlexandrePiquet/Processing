@@ -2,18 +2,48 @@
 Réalisé d'après la méthode de Cary H de la chaîne Abacaba
 Tuto vidéo : https://www.youtube.com/watch?v=XCiKO-Qysqk&list=PLsRQr3mpFF3Khoca0cXA8-_tSloCwlZK8
 code : https://github.com/carykh/AbacabaTutorialDrawer/blob/main/AbacabaTutorialDrawer.pde
-
-Structure du fichier .csv nécessaire : 
-- 1ère colonne pour les dates,
-- puis une colonne par jeu,
-- les cellules contiennent le nombre de parties CUMULEES.
-
+Structure du fichier .csv nécessaire : cf. README.md
 Code écrit par Alexandre Piquet
 v.1.3 du 26/10/2021
 */
 
 import java.util.*;
 import com.hamoid.*;
+
+/*
+Variables à modifier : 
+- fichiers d'entrée et de sortie,
+- nombre de jeux à afficher,
+- vitesse de défilement,
+- dimensions de la vidéo créée
+- ...
+*/
+
+// Chemin du fichier en entrée
+String cheminEntree = "/home/home/Documents/envois_Github/Processing/data/parties.csv";
+
+// Chemin du fichier en sortie
+String cheminSortie = "/home/home/Bureau/test.mp4";
+
+// Nombre de jeux
+int NBR_JEUX = 15;
+
+/*
+Vitesse d'enregistrement : 30 fps
+Depuis le 01/01/16 : 
+Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 30/09/21, durée totale : 34 min 50 s)
+Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 30/09/21, durée totale : 3 min 29 s)
+Pour une seule année : 
+Si FRAMES_PER_DAY = 15, 1 s/jour <=> 1 jour/s, durée totale : 3 min 03 s
+Si FRAMES_PER_DAY = 5, 1 s/jour <=> 1 jour/s, durée totale : 1 min 01 s
+Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s, durée totale : 36 s
+*/
+float FRAMES_PER_DAY = 3;
+
+//taille de la vidéo créée
+float largeur = 1520;
+float hauteur = 855;
+
 
 //Variables
 int NOMBRE_JOURS;
@@ -23,7 +53,7 @@ String[] dataFile;
 //classe Jeu
 Jeu[] jeu;
 //nombre de jeux à afficher + 1
-int TOP_VISIBLE = 16;
+int TOP_VISIBLE = NBR_JEUX + 1;
 float[] maxes;
 int[] unitChoices;
 int[] scales;
@@ -33,11 +63,10 @@ int date;
 //variables d'affichage
 String date_affichage;
 int partie_affichage;
-boolean affichageRecap = false;
 
 //taille de la vidéo créée
-float X_ECRAN = 1520;
-float Y_ECRAN = 855;
+float X_ECRAN = largeur;
+float Y_ECRAN = hauteur;
 
 //variables de taille
 float X_MIN = 15;
@@ -47,36 +76,22 @@ float Y_MAX = Y_ECRAN-0;
 float X_W = X_MAX-X_MIN;
 float Y_H = Y_MAX-Y_MIN;
 float BAR_PROPORTION = 0.9;
-
 float currentScale = -1;
 
 int frames = 0;
-int framesRecap = 0;
 float currentDay = 0;
 float BAR_HEIGHT;
 PFont font;
-/*
-Vitesse d'enregistrement : 30 fps
-Pour toutes les parties : 
-Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 30/09/21, durée totale : 34 min 50 s)
-Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 30/09/21, durée totale : 3 min 29 s)
-Pour une seule année : 
-Si FRAMES_PER_DAY = 15, 1 s/jour <=> 1 jour/s, durée totale : 3 min 03 s
-Si FRAMES_PER_DAY = 5, 1 s/jour <=> 1 jour/s, durée totale : 1 min 01 s
-Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s, durée totale : 36 s
-*/
-float FRAMES_PER_DAY = 1;
 //unités utilisées pour l'axe
 int[] unitPresets = {1,2,5,10,20,50,100,200,500,1000};
 //variable pour l'exportation de la vidéo
 VideoExport videoExport; 
 
-
 void setup(){
   font = loadFont("ProcessingSansPro-Regular-96.vlw");
   //choix des couleurs utilisées pour les barres
   randomSeed(432766);
-  dataFile = loadStrings("/home/home/Documents/envois_Github/Processing/data/parties.csv");
+  dataFile = loadStrings(cheminEntree);
   /*Récupération des lignes du fichier,
   calcul du nombre de jeux (colonnes-1) et du nombre de jours (lignes-1)*/
   String[] parts = dataFile[0].split(";");
@@ -119,65 +134,31 @@ void setup(){
   size(1520,854);
   
   //instanciation rendu vidéo
-  videoExport = new VideoExport(this, "/home/home/Bureau/test.mp4");
+  videoExport = new VideoExport(this, cheminSortie);
   videoExport.forgetFfmpegPath();
   videoExport.startMovie();
 }
 
-//jour de départ de l'enregistrement
-/*
-01/01/2020 : 1460
-31/12/2020 : 1824
-31/12/2021 : 2192
-*/
 int START_DAY = 0;
 void draw(){
-  if (affichageRecap){
-    framesRecap++;
-  }else{
-    int START = 0;
-    currentDay = getDayFromFrameCount(frames);
-    currentScale = getXScale(currentDay);
-    drawBackground();
-    drawHorizTickmarks();
-    drawbars();
-    saveVideoFrameHamoid();
-    frames++;
-  }
+  //int START = 0;
+  currentDay = getDayFromFrameCount(frames);
+  currentScale = getXScale(currentDay);
+  drawBackground();
+  drawHorizTickmarks();
+  drawbars();
+  saveVideoFrameHamoid();
+  frames++;
 }
 
 void saveVideoFrameHamoid(){
   videoExport.saveFrame();
   //si on a dépassé le nombre total de jour, fin de l'enregistrement
   if(getDayFromFrameCount(frames+1) >= NOMBRE_JOURS){
-    //v.1
-    /*videoExport.endMovie();
-    exit();*/
-    //v.2
-    Recap();
     println("fin de l'enregistrement");
     videoExport.endMovie();
     exit();
   }
-}
-
-void Recap(){
- //ICI
- println("écran récap");
- //on vide l'écran
- background(0);
- 
- ecranRecap();
- //videoExport.endMovie();
- //println("fin de l'enregistrement");
- //exit();
- 
-}
-
-void ecranRecap(){
-  text(date_affichage,100,50);
-  textAlign(CENTER);
-  textFont(font,48);
 }
 
 float getDayFromFrameCount(int fc){
@@ -231,7 +212,6 @@ void drawTickMarksOfUnit(int u, float alpha){
     text(v,x,Y_MIN+5);
   }
 }
-
 
 void drawBackground(){
   background(0);
