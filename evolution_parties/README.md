@@ -14,6 +14,8 @@ Fichier partie.csv :
 1ère ligne : Date;[jeu 1];[jeu 2];...;[jeu n]<br>
 autres lignes : jj/mm/aa;[nombre cumulé de parties pour le jeu 1];[pour le jeu 2];...;[pour le jeu n]
 
+Possiblement fichiers [nom du jeu].jpg
+
 + Sortie
 
 Fichier test.mp4.
@@ -28,6 +30,7 @@ Fichier test.mp4.
   + FRAMES_PER_DAY
   + largeur
   + hauteur
+  + éventuellement commenter / décommenter les lignes correspondant à l'utilisation d'images
 3. Exécuter le script
 4. Récupérer le fichier mp4
 
