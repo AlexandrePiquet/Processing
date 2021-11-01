@@ -3,7 +3,6 @@ class Jeu{
   //PImage image;
   float[] parties = new float[NOMBRE_JOURS];
   int[] rangs = new int[NOMBRE_JOURS];
-  //int[] images = new int[NOMBRE_JOURS];
   color c;
   public Jeu(String n){
     nom = n;

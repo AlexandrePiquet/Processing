@@ -26,7 +26,7 @@ String cheminEntree = "/home/home/Documents/envois_Github/Processing/data/partie
 String cheminSortie = "/home/home/Bureau/test.mp4";
 
 // Nombre de jeux
-int NBR_JEUX = 15;
+int NBR_JEUX = 3;
 
 /*
 Vitesse d'enregistrement : 30 fps
@@ -231,17 +231,21 @@ void drawbars(){
     Jeu je = jeu[p];
     if(je.parties[date] > 0){
       float val = linIndex(je.parties,currentDay);
-    float x = valueToX(val);
-    float rang = WAIndex(je.rangs, currentDay, 5);
-    float y = rankToY(rang);
-    fill (je.c);
-    rect(X_MIN,y,x-X_MIN,BAR_HEIGHT);
-    fill(255);
-    textFont(font,28);
-    partie_affichage = (int)je.parties[date];
-    textAlign(LEFT);
-    text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
-    date = (int)currentDay;
+      float x = valueToX(val);
+      float rang = WAIndex(je.rangs, currentDay, 5);
+      float y = rankToY(rang);
+      fill (je.c);
+      rect(X_MIN,y,x-X_MIN,BAR_HEIGHT);
+      fill(255);
+      textFont(font,28);
+      partie_affichage = (int)je.parties[date];
+      textAlign(LEFT);
+      //affichage si aucune utilisation d'image
+      text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
+      //affichage si utilisation d'images de 75x75
+      //text(je.nom+" : "+partie_affichage,X_MIN+6+80,y+BAR_HEIGHT-6);
+      //image(je.image,X_MIN+6,y+BAR_HEIGHT-6-75);
+      date = (int)currentDay;
     }
   } 
 }
