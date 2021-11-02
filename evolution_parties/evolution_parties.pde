@@ -4,7 +4,7 @@ Tuto vidéo : https://www.youtube.com/watch?v=XCiKO-Qysqk&list=PLsRQr3mpFF3Khoca
 code : https://github.com/carykh/AbacabaTutorialDrawer/blob/main/AbacabaTutorialDrawer.pde
 Structure du fichier .csv nécessaire : cf. README.md
 Code écrit par Alexandre Piquet
-v.1.3 du 26/10/2021
+v.1.5 du 02/11/2021
 */
 
 import java.util.*;
@@ -13,6 +13,8 @@ import com.hamoid.*;
 /*
 Variables à modifier : 
 - fichiers d'entrée et de sortie,
+- utilisation ou pas d'images,
+- taille de l'image utilisée
 - nombre de jeux à afficher,
 - vitesse de défilement,
 - dimensions de la vidéo créée
@@ -20,13 +22,19 @@ Variables à modifier :
 */
 
 // Chemin du fichier en entrée
-String cheminEntree = "/home/home/Documents/envois_Github/Processing/data/parties.csv";
+String cheminEntree = "/home/home/Documents/envois_Github/Processing/data/2020_3.csv";
 
 // Chemin du fichier en sortie
-String cheminSortie = "/home/home/Bureau/test.mp4";
+String cheminSortie = "/home/home/Bureau/test_remise en place.mp4";
+
+// Utilisation d'images / pas d'utilisation d'images bool = true / bool = false
+boolean utilisationImage = false;
+
+// Taille de l'image utilisée
+int tailleImage = 75;
 
 // Nombre de jeux
-int NBR_JEUX = 3;
+int NBR_JEUX = 15;
 
 /*
 Vitesse d'enregistrement : 30 fps
@@ -38,11 +46,11 @@ Si FRAMES_PER_DAY = 15, 1 s/jour <=> 1 jour/s, durée totale : 3 min 03 s
 Si FRAMES_PER_DAY = 5, 1 s/jour <=> 1 jour/s, durée totale : 1 min 01 s
 Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s, durée totale : 36 s
 */
-float FRAMES_PER_DAY = 3;
+float FRAMES_PER_DAY = 4;
 
-//taille de la vidéo créée
-float largeur = 1520;
-float hauteur = 855;
+//taille de la vidéo créée (penser à changer également les valeurs dans size)
+float largeur = 1580;
+float hauteur = 854;
 
 
 //Variables
@@ -102,7 +110,6 @@ void setup(){
   //initialisation des max journaliers
   maxes = new float[NOMBRE_JOURS];
   unitChoices = new int[NOMBRE_JOURS];
-  //unitChoices = new int[DAY_LEN];
   for(int d = 0; d < NOMBRE_JOURS; d++){
     maxes[d] = 0;
   }
@@ -141,7 +148,6 @@ void setup(){
 
 int START_DAY = 0;
 void draw(){
-  //int START = 0;
   currentDay = getDayFromFrameCount(frames);
   currentScale = getXScale(currentDay);
   drawBackground();
@@ -240,11 +246,15 @@ void drawbars(){
       textFont(font,28);
       partie_affichage = (int)je.parties[date];
       textAlign(LEFT);
-      //affichage si aucune utilisation d'image
+      if (utilisationImage) {
+        //affichage si utilisation d'images de taille x taille
+        text(je.nom+" : "+partie_affichage,X_MIN+6+tailleImage+5,y+BAR_HEIGHT-6);
+        image(je.image2,X_MIN+6,y+BAR_HEIGHT-6-tailleImage);
+      }
+      else {
+        //affichage si aucune utilisation d'image
       text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
-      //affichage si utilisation d'images de 75x75
-      //text(je.nom+" : "+partie_affichage,X_MIN+6+80,y+BAR_HEIGHT-6);
-      //image(je.image,X_MIN+6,y+BAR_HEIGHT-6-75);
+      }
       date = (int)currentDay;
     }
   } 
