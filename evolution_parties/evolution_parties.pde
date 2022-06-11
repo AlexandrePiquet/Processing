@@ -4,7 +4,7 @@ Tuto vidéo : https://www.youtube.com/watch?v=XCiKO-Qysqk&list=PLsRQr3mpFF3Khoca
 code : https://github.com/carykh/AbacabaTutorialDrawer/blob/main/AbacabaTutorialDrawer.pde
 Structure du fichier .csv nécessaire : cf. README.md
 Code écrit par Alexandre Piquet
-v.1.5 du 02/11/2021
+v.1.6 du 07/06/2022
 */
 
 import java.util.*;
@@ -14,6 +14,7 @@ import com.hamoid.*;
 Variables à modifier : 
 - fichiers d'entrée et de sortie,
 - utilisation ou pas d'images,
+- utilisation de nombres ou de %ages,
 - taille de l'image utilisée
 - nombre de jeux à afficher,
 - vitesse de défilement,
@@ -22,13 +23,16 @@ Variables à modifier :
 */
 
 // Chemin du fichier en entrée
-String cheminEntree = "/home/home/Documents/envois_Github/Processing/data/2020_3.csv";
+String cheminEntree = "/home/home/Documents/documents perso/jeux de société/parties au fil du temps/data/parties.csv";
 
 // Chemin du fichier en sortie
-String cheminSortie = "/home/home/Bureau/test_remise en place.mp4";
+String cheminSortie = "/home/home/Documents/documents perso/jeux de société/parties au fil du temps/video_2022_06_07 _ v3.mp4";
 
 // Utilisation d'images / pas d'utilisation d'images bool = true / bool = false
 boolean utilisationImage = false;
+
+// Utilisation utilisation de nombres ou de %ages bool = true / bool = false
+boolean utilisationNombre = true;
 
 // Taille de l'image utilisée
 int tailleImage = 75;
@@ -39,14 +43,14 @@ int NBR_JEUX = 15;
 /*
 Vitesse d'enregistrement : 30 fps
 Depuis le 01/01/16 : 
-Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 30/09/21, durée totale : 34 min 50 s)
-Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 30/09/21, durée totale : 3 min 29 s)
+Si FRAMES_PER_DAY = 30, 1 s/jour <=> 1 jour/s (au 18/05/22, durée totale : 36 min 00 s)
+Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s (au 18/05/22, durée totale : 3 min 54 s)
 Pour une seule année : 
 Si FRAMES_PER_DAY = 15, 1 s/jour <=> 1 jour/s, durée totale : 3 min 03 s
 Si FRAMES_PER_DAY = 5, 1 s/jour <=> 1 jour/s, durée totale : 1 min 01 s
 Si FRAMES_PER_DAY = 3, 0,1 s/jour <=> 10 jours/s, durée totale : 36 s
 */
-float FRAMES_PER_DAY = 4;
+float FRAMES_PER_DAY = 3;
 
 //taille de la vidéo créée (penser à changer également les valeurs dans size)
 float largeur = 1580;
@@ -246,14 +250,25 @@ void drawbars(){
       textFont(font,28);
       partie_affichage = (int)je.parties[date];
       textAlign(LEFT);
+      
       if (utilisationImage) {
         //affichage si utilisation d'images de taille x taille
-        text(je.nom+" : "+partie_affichage,X_MIN+6+tailleImage+5,y+BAR_HEIGHT-6);
+        if (utilisationNombre){
+          text(je.nom+" : "+partie_affichage,X_MIN+6+tailleImage+5,y+BAR_HEIGHT-6);
+        }
+        else {
+          text(je.nom+" : "+partie_affichage+" %",X_MIN+6+tailleImage+5,y+BAR_HEIGHT-6);
+        }
         image(je.image2,X_MIN+6,y+BAR_HEIGHT-6-tailleImage);
       }
       else {
         //affichage si aucune utilisation d'image
-      text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
+        if (utilisationNombre){
+          text(je.nom+" : "+partie_affichage,X_MIN+6,y+BAR_HEIGHT-6);
+        }
+        else {
+          text(je.nom+" : "+partie_affichage+" %",X_MIN+6,y+BAR_HEIGHT-6);
+        }
       }
       date = (int)currentDay;
     }
