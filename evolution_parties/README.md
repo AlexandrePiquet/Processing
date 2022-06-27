@@ -1,5 +1,5 @@
 # EVOLUTION PARTIES
-v.1.5 du 26/10/2021
+v.1.7 du 27/06/2022
 
 ## Principe
 
@@ -27,6 +27,7 @@ Fichier test.mp4.
   + cheminEntree
   + cheminSortie
   + utilisationImage
+  + utilisationNombre
   + tailleImage
   + NBR_JEUX
   + FRAMES_PER_DAY
