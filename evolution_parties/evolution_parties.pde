@@ -4,7 +4,7 @@ Tuto vidéo : https://www.youtube.com/watch?v=XCiKO-Qysqk&list=PLsRQr3mpFF3Khoca
 code : https://github.com/carykh/AbacabaTutorialDrawer/blob/main/AbacabaTutorialDrawer.pde
 Structure du fichier .csv nécessaire : cf. README.md
 Code écrit par Alexandre Piquet
-v.1.6 du 07/06/2022
+v.1.7 du 27/06/2022
 */
 
 import java.util.*;
@@ -26,7 +26,7 @@ Variables à modifier :
 String cheminEntree = "/home/home/Documents/documents perso/jeux de société/parties au fil du temps/data/parties.csv";
 
 // Chemin du fichier en sortie
-String cheminSortie = "/home/home/Documents/documents perso/jeux de société/parties au fil du temps/video_2022_06_07 _ v3.mp4";
+String cheminSortie = "/home/home/Documents/documents perso/jeux de société/parties au fil du temps/test_2022_06_11.mp4";
 
 // Utilisation d'images / pas d'utilisation d'images bool = true / bool = false
 boolean utilisationImage = false;
@@ -231,7 +231,12 @@ void drawBackground(){
   text(date_affichage,100,50);
   textAlign(CENTER);
   textFont(font,48);
-  text("Nombre de parties : ",600,Y_MIN-50);
+  if(utilisationNombre){
+    text("Nombre de parties : ",600,Y_MIN-50);
+  }
+  else{
+    text("Part du jeu dans les parties : ",600,Y_MIN-50);
+  }
 }
 
 //Tracé des barres pour les jeux et affichage du texte
